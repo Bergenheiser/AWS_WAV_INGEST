@@ -1,0 +1,11 @@
+{
+    "QueueConfigurations": [
+        {
+            "Id": "S3Messages",
+            "QueueArn": "arn:aws:sqs:us-east-1:000000000000:s3-ingest-messages",
+            "Events": [
+                "s3:ObjectCreated:*"
+            ]
+        }
+    ]
+}
