@@ -37,11 +37,23 @@ def probe_wave(file, bucket):
             return
         logger.info(f"Probe {file_path.name} {probe}")
         # TODO PART IV B test probe.sample_rate and probe.bits_per_sample else return none
-        return {
-            "file": file_path.name,
-            "bucket": bucket,
-            # TODO PART IV C add probe information
-        }
+        if probe.fmt.sample_rate == 48000 and probe.fmt.bits_per_sample == 24:
+            return {
+                "file": file_path.name,
+                "bucket": bucket,
+                "channel_count": int(probe.fmt.channel_count),
+                "frame_count": int(probe.data.frame_count),
+                "sample_rate": int(probe.fmt.sample_rate),
+                "bits_per_sample": int(probe.fmt.bits_per_sample),
+                "duration": f"{probe.data.frame_count / probe.fmt.sample_rate}",
+            }
+        else:
+            print(
+                "sample rate: ",
+                int(probe.fmt.sample_rate),
+                " bitsPerSample: ",
+                int(probe.fmt.bits_per_sample),
+            )
 
 
 while True:
@@ -56,8 +68,11 @@ while True:
                     )
                     path = f"tmp/{message['s3']['object']['key']}"
                     try:
-                        # TODO PART IV A s3.download_file
-                        # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html
+                        s3.download_file(
+                            message["s3"]["bucket"]["name"],
+                            message["s3"]["object"]["key"],
+                            path,
+                        )
                         logger.info(
                             f"{message['s3']['bucket']['name']} - {message['s3']['object']['key']} - {path}"
                         )
@@ -69,11 +84,16 @@ while True:
                         if probe:
                             # probe is valid
                             # TODO PART IV D POST probe to asset API
+                            requests.post(settings.ASSET_URL + "/asset", json=probe)
                             # https://www.w3schools.com/python/module_requests.asp
                             logger.info(f"{settings.ASSET_URL}/asset - {probe}")
                         else:
                             # probe is not valid
                             # TODO PART IV E s3.delete_object
+                            s3.delete_object(
+                                Bucket=message["s3"]["bucket"]["name"],
+                                Key=message["s3"]["object"]["key"],
+                            )
                             # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html
                             logger.error("Probe failed, file skipped")
                         # always remove file on /tmp

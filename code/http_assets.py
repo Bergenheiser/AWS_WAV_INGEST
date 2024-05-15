@@ -50,9 +50,19 @@ async def get(file: str):
 @app.delete("/asset/{file}")
 async def delete(file: str):
     # TODO PART IV F , find asset in assets, send delete order sqs.send_message and delete item from assets dictionnary
-    # https://boto3.amazonaws.com/v1/documentation/api/latest/guide/sqs.html
-    logger.info(f"{assets[file]['bucket']} - {assets[file]['file']}")
-    return JSONResponse(status_code=501, content={"message": "Not Implemented"})
+    if file in assets.keys():
+        obj = assets[file]
+        sqs.send_message(
+            QueueUrl=commons.get_queue_url(sqs, "s3-delete-messages"),
+            MessageBody=commons.dict_tojson(obj),
+        )
+        logger.info(f"{obj['bucket']} - {obj['file']}")
+        assets.pop(file)
+        return JSONResponse(
+            status_code=200, content={"message": "Deleted with Success"}
+        )
+    else:
+        return JSONResponse(status_code=404, content={"message": "File not found"})
 
 
 @app.post("/asset")

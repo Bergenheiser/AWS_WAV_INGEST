@@ -25,9 +25,12 @@ while True:
     for message in queue.receive_messages():
         data = json.loads(message.body)
         try:
-            # TODO PART IV G s3.delete_object
-            # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html
-            logger.info(f"File deleted {data['file']['bucket']} {data['file']['key']}")
+            s3.delete_object(
+                Bucket=data["bucket"],
+                Key=data["file"],
+            )
+            logger.info(f"File deleted {data["bucket"]} {data["key"]}")
+            #problèmes de lecture du format d'entrée
         except:
             logger.error("File not deleted")
         message.delete()
