@@ -35,9 +35,10 @@ awslocal s3api create-bucket --bucket ingest
 
 Des échantillons sont disponibles dans le dossier media/audio\_(1-5).wav. Déposez les dans le bucket ingest.
 
+--- 
 **SQS**
 
-SQS est un service d'échange de messages.
+SQS est un service d'échange de messages. (dope)
 
 **Complétez la ligne de commande et créez une nouvelle file SQS nommée `s3-ingest-messages` avec les attributs `file://configs/sqs-retention-config.json`:**
 
