@@ -22,16 +22,16 @@ awslocal s3api create-bucket --bucket ingest
 
 **Reportez les commandes AWS S3 pour:**
 
-    - Ajouter un fichier
-    - Listez des fichiers
-    - Supprimer un fichier
-
-    ```shell
+- Ajouter un fichier
+- Listez des fichiers
+- Supprimer un fichier
+    
+```shell
     awslocal s3 cp media/audio_1.wav s3://ingest/
     awslocal s3 cp media s3://ingest/ --recursive
     awslocal s3 ls s3://ingest/
     awslocal s3 rm s3://ingest/audio_1.wav
-    ```
+```
 
 Des échantillons sont disponibles dans le dossier media/audio\_(1-5).wav. Déposez les dans le bucket ingest.
 
