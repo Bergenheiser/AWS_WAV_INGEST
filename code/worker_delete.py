@@ -24,14 +24,15 @@ while True:
     logger.info("Looking for messages")
     for message in queue.receive_messages():
         data = json.loads(message.body)
+        print("raw \n : ", message.body)
+        print("format \n : ", data)
         try:
             s3.delete_object(
                 Bucket=data["bucket"],
                 Key=data["file"],
             )
-            logger.info(f"File deleted {data["bucket"]} {data["key"]}")
-            #problèmes de lecture du format d'entrée
-        except:
-            logger.error("File not deleted")
+            logger.info(f"File deleted {data['bucket']} {data['file']}")
+        except Exception as e:
+            logger.error(f"File not deleted: {e}")  # Improved error logging
         message.delete()
     sleep(10)
