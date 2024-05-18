@@ -296,7 +296,7 @@ Supprimez un des assets enregistrés par un appel sur l'API du service assets.
 
 **Quelle route est utilisée pour supprimer un asset sur le service HTTP ? Reportez les logs du worker et du service lors d'un suppression.**
 
-**La route empruntée par l'appel d'API de supression est **/assets/{nom_du_fichier}\*\*
+**La route empruntée par l'appel d'API de supression est "/assets/{nom_du_fichier}"**
 
 **Logs API DELETE :**
 
